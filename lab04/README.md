@@ -1,7 +1,7 @@
 # Лаборатори №4 — Нэгжийн тест JUnit 5
 
 **Хичээл:** F.CSA313 — Программ хангамжийн чанарын баталгаа ба тест (2026)
-**Оюутан:** Turbold 
+**Оюутан:** Оюун-Ухаан Төрболд 
 **Оюутаны код:** B232270090
 **Хэрэгсэл:** JUnit 5 (Jupiter, EPL 2.0), Apache Maven (Apache 2.0), OpenJDK 17 (GPLv2+CE)
 **Тестлэгдэх код:** `lab04-junit/src/main/java/mn/edu/must/sqat/GradeCalculator.java`
