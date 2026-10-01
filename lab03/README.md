@@ -1,7 +1,8 @@
 # Лаборатори №3 — Чанарын сценарио → SLO → k6 threshold
 
 **Хичээл:** F.CSA313 — Программ хангамжийн чанарын баталгаа ба тест (2026)
-**Оюутан:** Turbold (Justturuu) · `me@ember.mn`
+**Оюутан:** Оюун-Ухаан Төрболд
+**Оюутаны код:** B232270090
 **Хэрэгсэл:** Grafana k6 (AGPL v3), Node.js + Express (MIT)
 **Бай (target):** зөвхөн локал сервер `http://localhost:3000` (`local-server/server.js`)
 
