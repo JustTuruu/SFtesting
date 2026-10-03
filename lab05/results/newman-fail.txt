@@ -1,0 +1,145 @@
+newman
+
+lab05 (FAIL — зориуд буруу oracle)
+
+❏ S1. Happy path: идэвхтэй, урьдач хангасан оюутан бүртгүүлэхэд 201 OK [ЗОРИУД БУРУУ ORACLE: 201-ийн оронд 200]
+↳ Setup: PUT /students/S1_B232270090
+  PUT http://localhost:3000/students/S1_B232270090 [200 OK, 178B, 10ms]
+
+↳ Setup: PUT /courses/S1_CS313
+  PUT http://localhost:3000/courses/S1_CS313 [200 OK, 178B, 1ms]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
+  1. Статус 200
+  ✓  result = OK
+  ✓  registrationID нь тоо (яг утгыг шалгахгүй)
+
+❏ S2. Байхгүй оюутан бүртгүүлэхэд ERROR_NO_STUDENT
+↳ Setup: PUT /courses/S2_CS313
+  PUT http://localhost:3000/courses/S2_CS313 [200 OK, 178B, 1ms]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 192B, 1ms]
+  ✓  Статус 200
+  ✓  result = ERROR_NO_STUDENT
+
+❏ S3. Идэвхгүй оюутан бүртгүүлэхэд ERROR_INACTIVE_STUDENT
+↳ Setup: PUT /students/S3_B232270090
+  PUT http://localhost:3000/students/S3_B232270090 [200 OK, 178B, 1ms]
+
+↳ Setup: PUT /courses/S3_CS313
+  PUT http://localhost:3000/courses/S3_CS313 [200 OK, 178B, 0µs]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 198B, 1ms]
+  ✓  Статус 200
+  ✓  result = ERROR_INACTIVE_STUDENT
+
+❏ S4. Байхгүй хичээлд бүртгүүлэхэд ERROR_NO_COURSE
+↳ Setup: PUT /students/S4_B232270090
+  PUT http://localhost:3000/students/S4_B232270090 [200 OK, 178B, 1ms]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 191B, 1ms]
+  ✓  Статус 200
+  ✓  result = ERROR_NO_COURSE
+
+❏ S5. Урьдач хичээлийг огт үзээгүй бол ERROR_PREREQUISITES
+↳ Setup: PUT /students/S5_B232270090
+  PUT http://localhost:3000/students/S5_B232270090 [200 OK, 178B, 0µs]
+
+↳ Setup: PUT /courses/S5_CS313
+  PUT http://localhost:3000/courses/S5_CS313 [200 OK, 178B, 1ms]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 215B, 1ms]
+  ✓  Статус 200
+  ✓  result = ERROR_PREREQUISITES
+  ✓  missing = ['CS201']
+
+❏ S6. Урьдач хичээлийн заримыг нь үзсэн бол ERROR_PREREQUISITES (зөвхөн дутууг нь)
+↳ Setup: PUT /students/S6_B232270090
+  PUT http://localhost:3000/students/S6_B232270090 [200 OK, 178B, 0µs]
+
+↳ Setup: PUT /courses/S6_CS313
+  PUT http://localhost:3000/courses/S6_CS313 [200 OK, 178B, 0µs]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 215B, 1ms]
+  ✓  Статус 200
+  ✓  result = ERROR_PREREQUISITES
+  ✓  missing = ['CS201']
+
+❏ S7. Давхар алдаа: идэвхгүй + урьдач дутуу бол ERROR_INACTIVE_STUDENT давамгайлна
+↳ Setup: PUT /students/S7_B232270090
+  PUT http://localhost:3000/students/S7_B232270090 [200 OK, 178B, 1ms]
+
+↳ Setup: PUT /courses/S7_CS313
+  PUT http://localhost:3000/courses/S7_CS313 [200 OK, 178B, 0µs]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 198B, 1ms]
+  ✓  Статус 200
+  ✓  result = ERROR_INACTIVE_STUDENT
+
+❏ S8. Давхар алдаа: оюутан ч, хичээл ч байхгүй бол ERROR_NO_STUDENT давамгайлна
+↳ POST /registrations
+  POST http://localhost:3000/registrations [200 OK, 192B, 0µs]
+  ✓  Статус 200
+  ✓  result = ERROR_NO_STUDENT
+
+❏ S9. Хязгаар: урьдач нөхцөлгүй хичээлд хоосон coursesTaken-тай оюутан 201 OK
+↳ Setup: PUT /students/S9_B232270090
+  PUT http://localhost:3000/students/S9_B232270090 [200 OK, 178B, 0µs]
+
+↳ Setup: PUT /courses/S9_CS100
+  PUT http://localhost:3000/courses/S9_CS100 [200 OK, 178B, 1ms]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [201 Created, 202B, 1ms]
+  ✓  Статус 201
+  ✓  result = OK
+  ✓  registrationID нь тоо (яг утгыг шалгахгүй)
+
+❏ S10. Хязгаар: courseID талбар дутуу бол 400 ERROR_BAD_REQUEST
+↳ Setup: PUT /students/S10_B232270090
+  PUT http://localhost:3000/students/S10_B232270090 [200 OK, 178B, 0µs]
+
+↳ POST /registrations
+  POST http://localhost:3000/registrations [400 Bad Request, 202B, 1ms]
+  ✓  Статус 400
+  ✓  result = ERROR_BAD_REQUEST
+
+❏ S11. Хязгаар: буруу JSON илгээхэд 400 ERROR_BAD_JSON
+↳ POST /registrations
+  POST http://localhost:3000/registrations [400 Bad Request, 199B, 0µs]
+  ✓  Статус 400
+  ✓  result = ERROR_BAD_JSON
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              26 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              11 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │               0 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              26 │               1 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 255ms                                   │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 610B (approx)                          │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 1ms [min: 1ms, max: 10ms, s.d.: 2ms] │
+└─────────────────────────────────────────────────────────────┘
+
+  #  failure         detail                                                                                                                                       
+                                                                                                                                                                  
+ 1.  AssertionError  Статус 200                                                                                                                                   
+                     expected response to have status code 200 but got 201                                                                                        
+                     at assertion:0 in test-script                                                                                                                
+                     inside "S1. Happy path: идэвхтэй, урьдач хангасан оюутан бүртгүүлэхэд 201 OK [ЗОРИУД БУРУУ ORACLE: 201-ийн оронд 200] / POST /registrations" 

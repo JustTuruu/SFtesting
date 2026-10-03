@@ -1,0 +1,34 @@
+{
+  "info": {
+    "name": "lab05 — Даалгавар 5: нийтийн API (jsonplaceholder)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /users — 200, массив, эхний хэрэглэгч Leanne Graham",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Статус 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Хариу нь массив\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));",
+              "pm.test(\"Эхний хэрэглэгчийн нэр = Leanne Graham\", () => pm.expect(pm.response.json()[0].name).to.eql(\"Leanne Graham\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/users",
+          "protocol": "https",
+          "host": ["jsonplaceholder", "typicode", "com"],
+          "path": ["users"]
+        }
+      }
+    }
+  ]
+}
