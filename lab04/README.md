@@ -1,7 +1,7 @@
 # Лаборатори №4 — Нэгжийн тест JUnit 5
 
 **Хичээл:** F.CSA313 — Программ хангамжийн чанарын баталгаа ба тест (2026)
-**Оюутан:** Оюун-Ухаан Төрболд 
+**Оюутан:** О.Төрболд
 **Оюутаны код:** B232270090
 **Хэрэгсэл:** JUnit 5 (Jupiter, EPL 2.0), Apache Maven (Apache 2.0), OpenJDK 17 (GPLv2+CE)
 **Тестлэгдэх код:** `lab04-junit/src/main/java/mn/edu/must/sqat/GradeCalculator.java`
@@ -10,13 +10,13 @@
 
 ## Туршилтын орчин
 
-| Хэрэгсэл       | Хувилбар                                            | Гаралт файл                                        |
-| -------------- | --------------------------------------------------- | -------------------------------------------------- |
-| OpenJDK        | `17.0.18 2026-01-20 (Homebrew)`                     | [`results/java-version.txt`](results/java-version.txt) |
-| Apache Maven   | `3.9.9`                                             | [`results/mvn-version.txt`](results/mvn-version.txt)   |
-| JUnit Jupiter  | `5.10.2`                                            | `lab04-junit/pom.xml`-д тодорхойлсон                  |
-| surefire       | `3.2.5` (JUnit 5-ыг таниулах хамгийн доод хувилбар) | `pom.xml → <pluginManagement>`                     |
-| ҮС             | macOS (darwin/aarch64)                              | -                                                  |
+| Хэрэгсэл      | Хувилбар                                            | Гаралт файл                                            |
+| ------------- | --------------------------------------------------- | ------------------------------------------------------ |
+| OpenJDK       | `17.0.18 2026-01-20 (Homebrew)`                     | [`results/java-version.txt`](results/java-version.txt) |
+| Apache Maven  | `3.9.9`                                             | [`results/mvn-version.txt`](results/mvn-version.txt)   |
+| JUnit Jupiter | `5.10.2`                                            | `lab04-junit/pom.xml`-д тодорхойлсон                   |
+| surefire      | `3.2.5` (JUnit 5-ыг таниулах хамгийн доод хувилбар) | `pom.xml → <pluginManagement>`                         |
+| ҮС            | macOS (darwin/aarch64)                              | -                                                      |
 
 Файлын бүтэц:
 
@@ -71,10 +71,10 @@ mvn archetype:generate -DgroupId=mn.edu.must.sqat \
 
 `src/main/java/mn/edu/must/sqat/GradeCalculator.java`:
 
-| Метод                                                         | Логик                                                                                  |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `letterGrade(double score)` → `String`                        | `≥90→A, ≥80→B, ≥70→C, ≥60→D, <60→F`. `score` нь `[0,100]`-с гарвал `IllegalArgumentException`. |
-| `totalScore(att, lab, quiz1, quiz2, exam)` → `double`         | Дээд хязгаар: 10/40/10/10/30. Аль нэг сөрөг эсвэл хэтэрсэн бол `IllegalArgumentException`.       |
+| Метод                                                 | Логик                                                                                          |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `letterGrade(double score)` → `String`                | `≥90→A, ≥80→B, ≥70→C, ≥60→D, <60→F`. `score` нь `[0,100]`-с гарвал `IllegalArgumentException`. |
+| `totalScore(att, lab, quiz1, quiz2, exam)` → `double` | Дээд хязгаар: 10/40/10/10/30. Аль нэг сөрөг эсвэл хэтэрсэн бол `IllegalArgumentException`.     |
 
 Нэмэлт: `checkRange(name, value, max)` гэсэн жижиг helper — аль талбар зөрчигдсөн байгааг exception мессежээр илэрхийлдэг.
 
@@ -85,22 +85,22 @@ mvn archetype:generate -DgroupId=mn.edu.must.sqat \
 **Бүх тест метод — 15** (13 `@Test` + 2 `@ParameterizedTest`).
 **Surefire-ийн тоолсон тестийн тохиолдол — 28** (parameterized мөр бүрийг тусад нь тоолдог).
 
-| Бүлэг              | Метод                              | Юуг шалгах                                    |
-| ------------------ | ---------------------------------- | --------------------------------------------- |
-| letterGrade ердийн | `ninetyFiveIsA`, `thirtyIsF`       | Тохирлын жишээ (equivalence class)            |
-| letterGrade хязгаар | `ninetyIsExactlyA`                 | 90 нь A-ийн доод хязгаар (`>=` vs `>`)        |
-|                    | `justBelowNinetyIsB`               | 89.99 → B (нэг эпсилон доогуур)               |
-|                    | `sixtyBoundary`                    | 60→D, 59.99→F — `assertAll`                   |
-|                    | `extremeBoundaries`                | 0→F, 100→A                                    |
-| letterGrade буруу  | `negativeScoreThrows`              | `-1` → `assertThrows(IllegalArgumentException)`|
-|                    | `aboveHundredThrows`               | `101` → мөн адил                              |
-| totalScore зөв     | `totalScoreMax`                    | 10/40/10/10/30 → 100                          |
-|                    | `totalScoreTypical`                | 8/30/7/6/20 → 71                              |
-| totalScore буруу   | `totalScoreNegativeAttendance`     | att = -5 → exception                          |
-|                    | `totalScoreLabOverflow`            | lab = 41 → exception (дээд 40 хэтэрсэн)       |
-|                    | `totalScoreQuizOverflow`           | quiz1 = 11 → exception                        |
-| Parameterized      | `letterGradeBoundaries` (11 мөр)    | 100, 95, 90, 89.99, 80, 79.99, 70, 69.99, 60, 59.99, 0 |
-|                    | `totalScoreParameterized` (4 мөр)   | Ердийн 4 нийлбэрийн хослол                    |
+| Бүлэг               | Метод                             | Юуг шалгах                                             |
+| ------------------- | --------------------------------- | ------------------------------------------------------ |
+| letterGrade ердийн  | `ninetyFiveIsA`, `thirtyIsF`      | Тохирлын жишээ (equivalence class)                     |
+| letterGrade хязгаар | `ninetyIsExactlyA`                | 90 нь A-ийн доод хязгаар (`>=` vs `>`)                 |
+|                     | `justBelowNinetyIsB`              | 89.99 → B (нэг эпсилон доогуур)                        |
+|                     | `sixtyBoundary`                   | 60→D, 59.99→F — `assertAll`                            |
+|                     | `extremeBoundaries`               | 0→F, 100→A                                             |
+| letterGrade буруу   | `negativeScoreThrows`             | `-1` → `assertThrows(IllegalArgumentException)`        |
+|                     | `aboveHundredThrows`              | `101` → мөн адил                                       |
+| totalScore зөв      | `totalScoreMax`                   | 10/40/10/10/30 → 100                                   |
+|                     | `totalScoreTypical`               | 8/30/7/6/20 → 71                                       |
+| totalScore буруу    | `totalScoreNegativeAttendance`    | att = -5 → exception                                   |
+|                     | `totalScoreLabOverflow`           | lab = 41 → exception (дээд 40 хэтэрсэн)                |
+|                     | `totalScoreQuizOverflow`          | quiz1 = 11 → exception                                 |
+| Parameterized       | `letterGradeBoundaries` (11 мөр)  | 100, 95, 90, 89.99, 80, 79.99, 70, 69.99, 60, 59.99, 0 |
+|                     | `totalScoreParameterized` (4 мөр) | Ердийн 4 нийлбэрийн хослол                             |
 
 **Тестийн бүтэц:** тест бүр AAA (Arrange–Act–Assert)-тэй, `@DisplayName` нь Монгол хэлээр товч тайлбар өгнө.
 
