@@ -1,14 +1,24 @@
-name: Java CI with JaCoCo coverage gate
+name: Lab09 CI (JaCoCo coverage gate)
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'lab09/**'
+      - '.github/workflows/lab09-ci.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'lab09/**'
+      - '.github/workflows/lab09-ci.yml'
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: lab09
 
     steps:
       - name: Checkout source
@@ -20,6 +30,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
+          cache-dependency-path: lab09/pom.xml
 
       - name: Run tests and enforce 90% branch coverage
         run: mvn --batch-mode verify

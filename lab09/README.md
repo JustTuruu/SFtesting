@@ -53,4 +53,4 @@ Branch хамралт 100% байсан ч алдаа үлдсэн, учир н�
 
 ## Нэмэлт даалгавар — Coverage gate ба GitHub Actions
 
-`pom.xml`-д JaCoCo `check` goal нэмсэн. Энэ дүрэм нь branch хамралт 90%-иас доош орвол `mvn verify`-г fail болгоно. `.github/workflows/ci.yml` нь `main` branch руу push хийх болон pull request бүрд Ubuntu дээр Java 17 суулгаж, `mvn verify` ажиллуулна. Одоогийн 100% branch хамралт gate-ийг давж байна.
+`pom.xml`-д JaCoCo `check` goal нэмсэн. Энэ дүрэм нь branch хамралт 90%-иас доош орвол `mvn verify`-г fail болгоно. `.github/workflows/lab09-ci.yml` (repo-ийн root дахь) нь `main` branch руу push хийх болон pull request бүрд Ubuntu дээр Java 17 суулгаж, `mvn verify` ажиллуулна. Одоогийн 100% branch хамралт gate-ийг давж байна.
