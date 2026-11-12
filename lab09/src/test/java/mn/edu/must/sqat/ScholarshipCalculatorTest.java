@@ -122,4 +122,39 @@ class ScholarshipCalculatorTest {
     void gpaLoopBoundaryTwoOrMoreItems() {
         assertEquals(2.5, calculator.gpa(new double[] {95, 85, 75, 65}));
     }
+
+    @Test
+    void letterGradeBoundary60IsD() {
+        assertEquals("D", calculator.letterGrade(60));
+    }
+
+    @Test
+    void letterGradeBoundary59Point99IsF() {
+        assertEquals("F", calculator.letterGrade(59.99));
+    }
+
+    @Test
+    void letterGradeBoundary69Point99IsD() {
+        assertEquals("D", calculator.letterGrade(69.99));
+    }
+
+    @Test
+    void letterGradeBoundaryZeroIsF() {
+        assertEquals("F", calculator.letterGrade(0));
+    }
+
+    @Test
+    void letterGradeBoundary100IsA() {
+        assertEquals("A", calculator.letterGrade(100));
+    }
+
+    @Test
+    void letterGradeBoundary89Point99IsB() {
+        assertEquals("B", calculator.letterGrade(89.99));
+    }
+
+    @Test
+    void letterGradeBoundary90IsA() {
+        assertEquals("A", calculator.letterGrade(90));
+    }
 }
