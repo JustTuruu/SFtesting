@@ -16,3 +16,15 @@ Java version: 27.0.1.0.3, vendor: Homebrew, runtime: /opt/homebrew/Cellar/openjd
 Default locale: en_MN, platform encoding: UTF-8
 OS name: "mac os x", version: "26.6.2", arch: "aarch64", family: "mac"
 ```
+
+## A — Happy path ба эхний хэмжилт
+
+5 хэвийн урсгалын тест нэмсэн. `results/jacoco-A.csv`-ийн бодит хэмжилт:
+
+| Үзүүлэлт     | Хамрагдсан | Нийт |  Хувь |
+| ------------ | ---------: | ---: | ----: |
+| Instructions |        103 |  152 | 67.8% |
+| Branches     |         20 |   41 | 48.8% |
+| Lines        |         16 |   25 | 64.0% |
+
+Шар ромбо нь `letterGrade()`-ийн дүнгийн сонголтууд, `gpa()`-ийн switch болон `scholarship()`-ийн нөхцлүүдийн зарим зам дутуу байсныг харуулсан. Улаан мөрүүд нь exception зам, зөрчилтэй оюутны зам, доод босгоноос бага голч зэрэг тестлэгдээгүй замууд байсан.
