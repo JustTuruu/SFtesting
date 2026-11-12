@@ -107,4 +107,19 @@ class ScholarshipCalculatorTest {
     void scholarshipRejectsNegativeCredits() {
         assertThrows(IllegalArgumentException.class, () -> calculator.scholarship(3.0, -1, false));
     }
+
+    @Test
+    void gpaLoopBoundaryZeroItemsThrows() {
+        assertThrows(IllegalArgumentException.class, () -> calculator.gpa(new double[0]));
+    }
+
+    @Test
+    void gpaLoopBoundaryOneItem() {
+        assertEquals(4.0, calculator.gpa(new double[] {95}));
+    }
+
+    @Test
+    void gpaLoopBoundaryTwoOrMoreItems() {
+        assertEquals(2.5, calculator.gpa(new double[] {95, 85, 75, 65}));
+    }
 }
