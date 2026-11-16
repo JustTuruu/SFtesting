@@ -57,6 +57,41 @@ p-use-ийг T/F салаагаар нь тусад нь тоолсон тул �
 
 ## B — bonus(): бүрэн анализ
 
+### B1 — CFG
+
+![bonus CFG](cfg-bonus.png)
+
+`cfg-bonus.png` (Graphviz-ээр зурсан, эх нь `cfg-bonus.dot`). Зангилаа бүр файлын мөрийн дугаартай (`42: streak > best`), шийдвэрийн зангилаа нь ромбо. 32-р мөрийн `||` нөхцөлийг хоёр зангилаа (`32: attendance == null`, `32: threshold < 0`) болгон, for-each (мөр 38)-ийг "дараагийн элемент байгаа эсэх" нөхцөл ба "`a`-д дараагийн элементийг онооно" (def a) гэсэн хоёр зангилаа болгон тусгаарласан. Ирмэг бүрийн хажууд түүнийг дайрдаг тестийн бодит метод нэр байна (дөрвөөс дээш бол эхний хоёр ба `+N more`); бүрэн жагсаалтыг доорх хүснэгтээс хар. Бүх 26 ирмэг хамрагдсан.
+
+| Ирмэг | Салаа | Дайрдаг тестүүд |
+|-------|:-----:|-----------------|
+| 31 → 32a |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b03_nullAttendance_throws`, `b04_negativeThreshold_throws`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 32a → 33 | T | `b03_nullAttendance_throws` |
+| 32a → 32b | F | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b04_negativeThreshold_throws`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 32b → 33 | T | `b04_negativeThreshold_throws` |
+| 32b → 35 | F | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 35 → 36 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 36 → 37 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 37 → 38 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 38 → 38a | T | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 38 → 49 | F | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 38a → 39 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 39 → 40 | T | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 39 → 46 | F | `b01_longStreakWithBreak_thr3` |
+| 40 → 41 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 41 → 42 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 42 → 43 | T | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 42 → 38 | F | `b01_longStreakWithBreak_thr3` |
+| 43 → 38 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b07_belowThresholdLongStreak` |
+| 46 → 38 |  | `b01_longStreakWithBreak_thr3` |
+| 49 → 50 |  | `b01_longStreakWithBreak_thr3`, `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 50 → 51 | T | `b01_longStreakWithBreak_thr3`, `b05_emptyAttendance_thr0` |
+| 50 → 53 | F | `b02_belowThreshold_thr5`, `b06_emptyAttendance_thr1`, `b07_belowThresholdLongStreak` |
+| 51 → 53 |  | `b01_longStreakWithBreak_thr3`, `b05_emptyAttendance_thr0` |
+| 53 → 54 | T | `b01_longStreakWithBreak_thr3`, `b07_belowThresholdLongStreak` |
+| 53 → 56 | F | `b02_belowThreshold_thr5`, `b05_emptyAttendance_thr0`, `b06_emptyAttendance_thr1` |
+| 54 → 56 |  | `b01_longStreakWithBreak_thr3`, `b07_belowThresholdLongStreak` |
+
 ### B2 — Def/Use жагсаалт (мөр бүрээр)
 
 ```text
@@ -91,43 +126,43 @@ p-use-ийг T/F салаагаар нь тусад нь тоолсон. Ний�
 
 | # | Хувьсагч | Def мөр | Use мөр | Төрөл | Def-clear зам | Тестийн ID | Хамрагдсан |
 |---|----------|--------:|--------:|-------|---------------|------------|:----------:|
-| 1 | attendance | 31 | 32 (F) (attendance == null) | p-use | 31→32a ⇒ 32b | B01, B02 | ✔ |
-| 2 | attendance | 31 | 32 (T) (attendance == null) | p-use | 31→32a ⇒ 33 | — | ✘ |
-| 3 | attendance | 31 | 38 (F) | p-use | 31→32a→32b→35→36→37→38 ⇒ 49 | B01, B02 | ✔ |
-| 4 | attendance | 31 | 38 (T) | p-use | 31→32a→32b→35→36→37→38 ⇒ 38a | B01, B02 | ✔ |
-| 5 | threshold | 31 | 32 (F) (threshold < 0) | p-use | 31→32a→32b ⇒ 35 | B01, B02 | ✔ |
-| 6 | threshold | 31 | 32 (T) (threshold < 0) | p-use | 31→32a→32b ⇒ 33 | — | ✘ |
-| 7 | threshold | 31 | 50 (F) | p-use | 31→32a→32b→35→36→37→38→49→50 ⇒ 53 | B02 | ✔ |
-| 8 | threshold | 31 | 50 (T) | p-use | 31→32a→32b→35→36→37→38→49→50 ⇒ 51 | B01 | ✔ |
-| 9 | present | 35 | 40 | c-use | 35→36→37→38→38a→39→40 | B01, B02 | ✔ |
-| 10 | present | 35 | 50 (F) | p-use | 35→36→37→38→49→50 ⇒ 53 | — | ✘ |
-| 11 | present | 35 | 50 (T) | p-use | 35→36→37→38→49→50 ⇒ 51 | — | ✘ |
-| 12 | present | 40 | 40 | c-use | 40→41→42→38→38a→39→40 | B01, B02 | ✔ |
-| 13 | present | 40 | 50 (F) | p-use | 40→41→42→38→49→50 ⇒ 53 | B02 | ✔ |
+| 1 | attendance | 31 | 32 (F) (attendance == null) | p-use | 31→32a ⇒ 32b | B01, B02, B04, B05, B06, B07 | ✔ |
+| 2 | attendance | 31 | 32 (T) (attendance == null) | p-use | 31→32a ⇒ 33 | B03 | ✔ |
+| 3 | attendance | 31 | 38 (F) | p-use | 31→32a→32b→35→36→37→38 ⇒ 49 | B01, B02, B05, B06, B07 | ✔ |
+| 4 | attendance | 31 | 38 (T) | p-use | 31→32a→32b→35→36→37→38 ⇒ 38a | B01, B02, B07 | ✔ |
+| 5 | threshold | 31 | 32 (F) (threshold < 0) | p-use | 31→32a→32b ⇒ 35 | B01, B02, B05, B06, B07 | ✔ |
+| 6 | threshold | 31 | 32 (T) (threshold < 0) | p-use | 31→32a→32b ⇒ 33 | B04 | ✔ |
+| 7 | threshold | 31 | 50 (F) | p-use | 31→32a→32b→35→36→37→38→49→50 ⇒ 53 | B02, B06, B07 | ✔ |
+| 8 | threshold | 31 | 50 (T) | p-use | 31→32a→32b→35→36→37→38→49→50 ⇒ 51 | B01, B05 | ✔ |
+| 9 | present | 35 | 40 | c-use | 35→36→37→38→38a→39→40 | B01, B02, B07 | ✔ |
+| 10 | present | 35 | 50 (F) | p-use | 35→36→37→38→49→50 ⇒ 53 | B06 | ✔ |
+| 11 | present | 35 | 50 (T) | p-use | 35→36→37→38→49→50 ⇒ 51 | B05 | ✔ |
+| 12 | present | 40 | 40 | c-use | 40→41→42→38→38a→39→40 | B01, B02, B07 | ✔ |
+| 13 | present | 40 | 50 (F) | p-use | 40→41→42→38→49→50 ⇒ 53 | B02, B07 | ✔ |
 | 14 | present | 40 | 50 (T) | p-use | 40→41→42→38→49→50 ⇒ 51 | B01 | ✔ |
-| 15 | streak | 36 | 41 | c-use | 36→37→38→38a→39→40→41 | B01, B02 | ✔ |
-| 16 | streak | 41 | 41 | c-use | 41→42→38→38a→39→40→41 | B01, B02 | ✔ |
+| 15 | streak | 36 | 41 | c-use | 36→37→38→38a→39→40→41 | B01, B02, B07 | ✔ |
+| 16 | streak | 41 | 41 | c-use | 41→42→38→38a→39→40→41 | B01, B02, B07 | ✔ |
 | 17 | streak | 41 | 42 (F) | p-use | 41→42 ⇒ 38 | B01 | ✔ |
-| 18 | streak | 41 | 42 (T) | p-use | 41→42 ⇒ 43 | B01, B02 | ✔ |
-| 19 | streak | 41 | 43 | c-use | 41→42→43 | B01, B02 | ✔ |
+| 18 | streak | 41 | 42 (T) | p-use | 41→42 ⇒ 43 | B01, B02, B07 | ✔ |
+| 19 | streak | 41 | 43 | c-use | 41→42→43 | B01, B02, B07 | ✔ |
 | 20 | streak | 46 | 41 | c-use | 46→38→38a→39→40→41 | B01 | ✔ |
 | 21 | best | 37 | 42 (F) | p-use | 37→38→38a→39→40→41→42 ⇒ 38 | — | биелэшгүй |
-| 22 | best | 37 | 42 (T) | p-use | 37→38→38a→39→40→41→42 ⇒ 43 | B01, B02 | ✔ |
-| 23 | best | 37 | 53 (F) | p-use | 37→38→49→50→53 ⇒ 56 | — | ✘ |
+| 22 | best | 37 | 42 (T) | p-use | 37→38→38a→39→40→41→42 ⇒ 43 | B01, B02, B07 | ✔ |
+| 23 | best | 37 | 53 (F) | p-use | 37→38→49→50→53 ⇒ 56 | B05, B06 | ✔ |
 | 24 | best | 37 | 53 (T) | p-use | 37→38→49→50→53 ⇒ 54 | — | биелэшгүй |
 | 25 | best | 43 | 42 (F) | p-use | 43→38→38a→39→40→41→42 ⇒ 38 | B01 | ✔ |
-| 26 | best | 43 | 42 (T) | p-use | 43→38→38a→39→40→41→42 ⇒ 43 | B01, B02 | ✔ |
+| 26 | best | 43 | 42 (T) | p-use | 43→38→38a→39→40→41→42 ⇒ 43 | B01, B02, B07 | ✔ |
 | 27 | best | 43 | 53 (F) | p-use | 43→38→49→50→53 ⇒ 56 | B02 | ✔ |
-| 28 | best | 43 | 53 (T) | p-use | 43→38→49→50→53 ⇒ 54 | B01 | ✔ |
-| 29 | score | 49 | 54 | c-use | 49→50→53→54 | — | ✘ |
-| 30 | score | 49 | 56 | c-use | 49→50→53→56 | B02 | ✔ |
+| 28 | best | 43 | 53 (T) | p-use | 43→38→49→50→53 ⇒ 54 | B01, B07 | ✔ |
+| 29 | score | 49 | 54 | c-use | 49→50→53→54 | B07 | ✔ |
+| 30 | score | 49 | 56 | c-use | 49→50→53→56 | B02, B06 | ✔ |
 | 31 | score | 51 | 54 | c-use | 51→53→54 | B01 | ✔ |
-| 32 | score | 51 | 56 | c-use | 51→53→56 | — | ✘ |
-| 33 | score | 54 | 56 | c-use | 54→56 | B01 | ✔ |
+| 32 | score | 51 | 56 | c-use | 51→53→56 | B05 | ✔ |
+| 33 | score | 54 | 56 | c-use | 54→56 | B01, B07 | ✔ |
 | 34 | a | 38 | 39 (F) | p-use | 38a→39 ⇒ 46 | B01 | ✔ |
-| 35 | a | 38 | 39 (T) | p-use | 38a→39 ⇒ 40 | B01, B02 | ✔ |
+| 35 | a | 38 | 39 (T) | p-use | 38a→39 ⇒ 40 | B01, B02, B07 | ✔ |
 
-> Энэ хүснэгт all-defs шатны байдлаар ("Тестийн ID" = B01, B02). `✘` = энэ шатанд хараахан хамрагдаагүй, **all-DU-pairs** шатанд нэмэх тестүүдээр хамрагдана.
+> "Тестийн ID" багана нь B01–B07 тестүүдийн бодитоор хамарсан хосыг үзүүлнэ (хос бүрийн хамралтыг тестийн гүйцэтгэлийн замаас скриптээр тооцож шалгасан). `—` ба `биелэшгүй` нь доорх 2 хос; бусад **33 хос бүгд ✔**.
 
 **Биелэшгүй хосууд (2):**
 
@@ -158,3 +193,23 @@ All-defs нь def бүрээс дор хаяж нэг use хүртэл def-clear
 | Line     | 22 | 2 | 24 |
 
 **All-defs хангагдсан ч branch 100% биш байж болно:** Branch 14/16 байсан, алдсан 2 салаа нь 32-р мөрийн `attendance == null` ба `threshold < 0`-ийн T (exception) салаа. All-defs нь def бүрийг use-д хүргэхийг л шаарддаг; exception зам дээр шинэ def байхгүй тул шаардлагад орохгүй. Үүнийг all-DU-pairs шатанд хүснэгтийн #2 (`attendance`@31 → 32 T) ба #6 (`threshold`@31 → 32 T) хосын тестүүдээр нөхнө.
+
+### B4 — Шат 2: ALL-DU-PAIRS
+
+All-defs-ийн 2 тестийн дээр дараах тестүүдийг нэмсэн (`BonusTest.java`). Тест бүрийн `@DisplayName`-д шинээр хамруулж буй хосууд нь бичигдсэн.
+
+| ID | Метод | Оролт → гаралт | Шинээр хамарсан хос | Яагаад |
+|----|-------|----------------|---------------------|--------|
+| B03 | `b03_nullAttendance_throws` | `bonus(null, 3)` → IAE | `attendance`@31→32 (T) | `attendance == null` салаа |
+| B04 | `b04_negativeThreshold_throws` | `bonus([1], -1)` → IAE | `threshold`@31→32 (T) | `threshold < 0` салаа (attendance != null байх ёстой) |
+| B05 | `b05_emptyAttendance_thr0` | `bonus([], 0)` = 5 | `present`@35→50 (T), `best`@37→53 (F), `score`@51→56 | давталт огт ажиллахгүй, def@35/37 нь шууд 50/53-д хүрнэ; `0 >= 0` тул score@51 |
+| B06 | `b06_emptyAttendance_thr1` | `bonus([], 1)` = 0 | `present`@35→50 (F) | хоосон массив, `0 >= 1` худал |
+| B07 | `b07_belowThresholdLongStreak` | `bonus([1,1,1,1,1], 10)` = 3 | `score`@49→54 | present < threshold тул score@49 дарагдахгүй, харин best ≥ 5 тул 54-д хүрнэ |
+
+B01–B07 нь хүснэгтийн **33 боломжит хосыг бүгдийг** хамарсан (Хамрагдсан баганад `✘` үлдээгүй). Хоёр шатны тест тусдаа commit-оор орсон: `results/mvn-verify-alldefs.txt` (all-defs, 5 тест) ба `results/mvn-verify-alldu.txt` (all-DU-pairs).
+
+### B5 — JaCoCo ба DU: branch 100% байхад хос үлдэж болно
+
+`results/jacoco-alldu.csv` (Tests run: 10 = GcdTest 3 + BonusTest 7): Branch **16/16**, Line 23/24 (алдсан 1 мөр нь 7-р мөрийн далд constructor — хэвийн).
+
+all-defs үед Branch 14/16 байсан бол B03, B04 нэмэгдмэгц 100% болсон. Branch 100% болсон мөчид DU хос үлдэж болохыг батлахын тулд зөвхөн GcdTest + B01–B04 (`results/mvn-verify-branch100.txt`, `results/jacoco-branch100.csv`) ажиллуулсан: Tests run: 7, **Branch 16/16 = 100%**, BRANCH_MISSED = 0. Гэтэл тэр үед DU хосуудаас **5 хос хамрагдаагүй** (33-аас): `present`@35→50 (T), `present`@35→50 (F), `best`@37→53 (F), `score`@49→54, `score`@51→56. Эдгээр нь хоосон массив (`present`@35, `best`@37 шууд 50/53-д хүрэх), мөн `score`-ийн def-ийг дарагдахгүйгээр use-д хүргэх (`score`@49→54, `score`@51→56) хослолууд — branch тоолуур салаа бүрийг "нэг удаа дайрсан" гэж үздэг тул def-ийн use-д хүрсэн эсэхийг хэмждэггүй. Иймээс JaCoCo-гийн 100% нь DU хамралтыг батлахгүй; гараар хийсэн DU хүснэгт л үүнийг хэмжинэ.
