@@ -213,3 +213,30 @@ B01–B07 нь хүснэгтийн **33 боломжит хосыг бүгди�
 `results/jacoco-alldu.csv` (Tests run: 10 = GcdTest 3 + BonusTest 7): Branch **16/16**, Line 23/24 (алдсан 1 мөр нь 7-р мөрийн далд constructor — хэвийн).
 
 all-defs үед Branch 14/16 байсан бол B03, B04 нэмэгдмэгц 100% болсон. Branch 100% болсон мөчид DU хос үлдэж болохыг батлахын тулд зөвхөн GcdTest + B01–B04 (`results/mvn-verify-branch100.txt`, `results/jacoco-branch100.csv`) ажиллуулсан: Tests run: 7, **Branch 16/16 = 100%**, BRANCH_MISSED = 0. Гэтэл тэр үед DU хосуудаас **5 хос хамрагдаагүй** (33-аас): `present`@35→50 (T), `present`@35→50 (F), `best`@37→53 (F), `score`@49→54, `score`@51→56. Эдгээр нь хоосон массив (`present`@35, `best`@37 шууд 50/53-д хүрэх), мөн `score`-ийн def-ийг дарагдахгүйгээр use-д хүргэх (`score`@49→54, `score`@51→56) хослолууд — branch тоолуур салаа бүрийг "нэг удаа дайрсан" гэж үздэг тул def-ийн use-д хүрсэн эсэхийг хэмждэггүй. Иймээс JaCoCo-гийн 100% нь DU хамралтыг батлахгүй; гараар хийсэн DU хүснэгт л үүнийг хэмжинэ.
+
+## C — Fault seeding: урсгалын алдаа тарих
+
+`DataFlowTargets.java` дээр 3 мутацийг НЭГ НЭГЭЭР хийж, `mvn test`-ийг ажиллуулаад `git restore`-оор буцаасан (мутацийг commit хийгээгүй). Мутаци бүрийг all-DU-pairs шатны тестийн багц (GcdTest 3 + BonusTest 7 = **10 тест**)-аар шалгасан.
+
+| № | Мутаци | Төрөл | Үр дүн | Унасан тест ба мөр (файлаас) | Файл |
+|---|--------|-------|--------|------------------------------|------|
+| M1 | 41-р мөрийн `streak = streak + 1`-ийг устгах | Missing update (дутуу def) | **БАРЬСАН** — Tests run: 10, Failures: 2 | `BonusTest.b01_longStreakWithBreak_thr3:21 expected: <8> but was: <5>`; `BonusTest.b07_belowThresholdLongStreak:60 expected: <3> but was: <0>` | `results/mvn-test-M1.txt` |
+| M2 | `if (streak > best) best = streak;` → `best = present;` | Wrong variable (буруу use) | **АМЬД ҮЛДСЭН** — Tests run: 10, Failures: 0, BUILD SUCCESS | — | `results/mvn-test-M2.txt` |
+| M3 | давталтын дараа `int total = present + best;` нэмэх | Dead definition (үхсэн def) | **АМЬД ҮЛДСЭН** — Tests run: 10, Failures: 0, BUILD SUCCESS | — | `results/mvn-test-M3.txt` |
+
+**M1 яагаад баригдав.** `streak` 0-ээс хэзээ ч нэмэгдэхгүй тул `42: streak > best` үргэлж худал, `best` үргэлж 0 хэвээр үлдэж 53-ын `best >= 5` T салаа руу хэзээ ч орохгүй. Үүнийг DU хос шууд шаарддаг: `streak`@41→42, `streak`@41→43, `best`@43→53 (T) хосуудын тестүүд (B01, B07) 3 оноо нэмэгдэхийг шалгадаг тул унав.
+
+**M2 яагаад амьд үлдсэн (шалтгаан).** Мутацид `best` нь `streak`-ийн оронд `present`-ээр онооглогдож байна. Манай бүх DU тестэд `best >= 5` үнэлэгдэх үед `present` ба хамгийн урт цуваа хоёр ижил талдаа байсан (B01: present = 6, streak = 5 — хоёул ≥ 5; B07: 5 ба 5; B02: 3 ба 3; B05, B06: хоосон) тул `best = present` нь жинхэнэ `best`-тэй ижил шийдвэр гаргасан. All-DU-pairs нь **анхны** программын def–use хосыг (`streak`@41→43 гэх мэт) хамруулахыг шаарддаг; мутаци нь шинэ use (`present`@40→43) оруулж, харин `streak`-ийн хосыг устгадаг ч тестүүд тэр хоёрыг ялгах утга (present ≠ хамгийн урт цуваа, мөн present ≥ 5 > цуваа) хэзээ ч өгөөгүй. Тиймээс хос бүр хамрагдсан байсан ч өгөгдлийн **утга** таарсан тул алдаа харагдаагүй.
+
+**M2-г унагасан тест.** `BonusTest.b08_fivePresentLongestStreakThree`: `bonus([1,1,0,1,1,1], 1)` — 5 ирсэн өдөр боловч хамгийн урт цуваа 3 (`present` ≠ `streak`-ийн дээд), хүлээгдэх оноо 5 (цуваа урамшуулалгүй). Мутаци хийсэн үед `best = present = 5` болж +3 нэмэгдэнэ. Файл: `results/mvn-test-M2-kill.txt` — Tests run: 11, Failures: 1, `BonusTest.b08_fivePresentLongestStreakThree:69 expected: <5> but was: <8>`. Тестийг нэмсний дараа кодыг буцааж, B08 бүх тестийн хамт ногоон. B08 шинэ DU хос нэмдэггүй — зөвхөн утгын зөрүү шалгана.
+
+**M3 яагаад ямар ч тест унагаадаггүй.** `total` нь хэзээ ч уншигддаггүй тул гаралт (`score`)-д нөлөөлөхгүй; def байгаа ч түүнд use байхгүй тул DU хос үүсэхгүй, тест юу ч шалгаж чадахгүй. `javac -Xlint:all` ч анхааруулахгүй (гаралт хоосон, exit 0). Үүнийг барих ёстой **багаж — статик анализ**: `results/static-analysis-M3.txt` дотор PMD 7.7.0 (maven-pmd-plugin 3.26.0)-ийн бодит гаралт байгаа:
+
+```text
+Rule: UnusedLocalVariable (Best Practices), Line 49, Method bonus
+Message: Avoid unused local variables such as 'total'.
+```
+
+Лекцийн IDE-ийн анхааруулга гэхээсээ энэ нь ижил төрлийн алдааг (def-ээс хойш use байхгүй — data-flow anomaly) барьдаг статик анализын хэрэгслийн гаралт. IDE-ийн анхааруулгыг (ж: `total` хэзээ ч ашиглагдахгүй) өөрийн IDE дээрээ шалгаж, зургийг энд нэмж болно.
+
+Мутаци бүрийн дараа `git restore src/main`-ээр эх кодыг буцаасан: `git diff <Starter commit> HEAD -- src/main` хоосон.

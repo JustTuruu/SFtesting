@@ -59,4 +59,13 @@ class BonusTest {
     void b07_belowThresholdLongStreak() {
         assertEquals(3, DataFlowTargets.bonus(new int[] {1, 1, 1, 1, 1}, 10));
     }
+
+    // ---------------- Stage 3: test added to kill mutant M2 (best = present) ----------------
+
+    @Test
+    @DisplayName("B08 kills M2: 5 present days but the longest streak is only 3 -> no streak bonus. "
+            + "Adds no new DU pair; checks that best holds the streak, not the present count")
+    void b08_fivePresentLongestStreakThree() {
+        assertEquals(5, DataFlowTargets.bonus(new int[] {1, 1, 0, 1, 1, 1}, 1));
+    }
 }
